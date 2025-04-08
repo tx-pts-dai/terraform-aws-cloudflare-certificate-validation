@@ -8,11 +8,4 @@ locals {
       type    = module.acm.acm_certificate_domain_validation_options[idx].resource_record_type
     }
   }
-  validation_records_to_create = {
-    for _, record in module.acm.acm_certificate_domain_validation_options : record.domain_name => {
-      name  = trimsuffix(record.resource_record_name, ".")
-      type  = record.resource_record_type
-      value = record.resource_record_value
-    } if length(lookup(data.cloudflare_dns_records.validation_record, record.domain_name, { result = [] }).result) == 0
-  }
 }

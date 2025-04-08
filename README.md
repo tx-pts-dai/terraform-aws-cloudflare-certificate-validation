@@ -107,7 +107,6 @@ as described in the `.pre-commit-config.yaml` file
 |------|-------------|
 | <a name="output_acm_validation_options"></a> [acm\_validation\_options](#output\_acm\_validation\_options) | value of the validation record |
 | <a name="output_data_validation_record"></a> [data\_validation\_record](#output\_data\_validation\_record) | value of the validation record |
-| <a name="output_local_validation_record"></a> [local\_validation\_record](#output\_local\_validation\_record) | value of the validation record |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Authors
