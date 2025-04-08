@@ -18,7 +18,7 @@ terraform {
 
 module "dns" {
   source                    = "../../"
-  create_validation_records = true # default value
+  create_validation_records = false # default is true
   cloudflare_secret_id      = "dai/cloudflare/apiToken"
   records_map = {
     "foo.examples.tamedia.ch" = {
