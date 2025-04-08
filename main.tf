@@ -42,6 +42,7 @@ resource "null_resource" "validation_records" {
         "type": "${each.value.type}",
         "name": "${each.value.name}",
         "content": "${each.value.value}",
+        "comment": "ACM validation for account ${data.aws_caller_identity.current.account_id}",
         "ttl": 300,
         "proxied": false
       }'

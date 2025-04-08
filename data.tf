@@ -19,3 +19,5 @@ data "cloudflare_dns_records" "validation_record" {
     exact = module.acm.acm_certificate_domain_validation_options[0].domain_name
   }
 }
+
+data "aws_caller_identity" "current" {}
