@@ -62,27 +62,3 @@ resource "aws_acm_certificate_validation" "acm" {
     null_resource.validation_records
   ]
 }
-
-# NOT NECESSARY !
-# resource "null_resource" "validation_records_delete" {
-#   for_each = local.validation_records
-
-#   provisioner "local-exec" {
-#     command = <<-EOF
-#       curl -X DELETE "https://api.cloudflare.com/client/v4/zones/${each.value.zone_id}/dns_records" \
-#       -H "Authorization: Bearer ${jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["apiToken"]}" \
-#       -H "Content-Type: application/json" \
-#       --data '{
-#         "type": "${each.value.type}",
-#         "name": "${each.value.name}",
-#         "content": "${each.value.value}",
-#         "ttl": 300,
-#         "proxied": false
-#       }'
-#     EOF
-#   }
-
-#   depends_on = [
-#     aws_acm_certificate_validation.acm
-#   ]
-# }
