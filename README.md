@@ -1,54 +1,45 @@
-# < This section can be removed >
+# Terraform AWS DNS Validation Module
 
-Official doc for public modules [hashicorp](https://developer.hashicorp.com/terraform/registry/modules/publish)
+This Terraform module automates the creation of DNS validation records for ACM certificates using AWS and Cloudflare.
 
-Repo structure:
+## Important
 
-```
-├── README.md
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── ...
-├── modules/
-│   ├── nestedA/
-│   │   ├── README.md
-│   │   ├── variables.tf
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   ├── nestedB/
-│   ├── .../
-├── examples/
-│   ├── exampleA/
-│   │   ├── main.tf
-│   ├── exampleB/
-│   ├── .../
-```
+This module handles validation records creation idempotently, meaning certificates with potentially the same DNS specifications will force recreation of validation records if they don't exist yet. If they already exist, the certificate will be validated through those records.
 
-# My Terraform Module
+It leverages the `null_resource` and `local-exec` provisioner to interact with the Cloudflare API for DNS record management. However, even after a `terraform destroy`, the null resource does not remove previously created validation records. To fully clean up the resources, you **must** manually delete the Cloudflare records.
 
-< module description >
+## Limits
+
+AWS ACM certificates need to be renewed once a year. To automatically handle the renewal, the DNS validation records must still exist. If automatic certificate renewal fails and you receive an email from AWS (usually 30 to 60 days before expiration), first check whether these records have been manually removed. If they have, you will need to recreate them.
 
 ## Usage
 
-< describe the module minimal code required for a deployment >
+Below is an example of how to use this module:
 
 ```hcl
-module "my_module_example" {
+module "dns_validation" {
+  source = "github.com/your-repo/terraform-aws-dns-validation"
+
+  cloudflare_secret_id = "your-cloudflare-secret-id"
+  records_map = {
+    "foo.examples.domain.ch" = {
+      subdomain = "foo.examples"
+      zone      = "domain.ch"
+    }
+  }
 }
 ```
 
-## Explanation and description of interesting use-cases
+## Features
 
-< create a h2 chapter for each section explaining special module concepts >
+- Automatically creates AWS ACM certificate for DNS records
+- Automatically creates DNS validation records in Cloudflare for ACM certificates.
+- Supports multiple validation records using a map of subdomains and zones.
+- Integrates with AWS Secrets Manager to securely retrieve the Cloudflare API token.
 
 ## Examples
 
-< if the folder `examples/` exists, put here the link to the examples subfolders with their descriptions >
-
-## Contributing
-
-< issues and contribution guidelines for public modules >
+You can find examples in the [`examples/`](./examples/) folder. Each subfolder contains a specific use case with a detailed explanation.
 
 ### Pre-Commit
 
@@ -72,28 +63,50 @@ as described in the `.pre-commit-config.yaml` file
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.11 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
+| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | ~> 5.0 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.0 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.0 |
+| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | ~> 5.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | ~> 3.0 |
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | 5.1.1 |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_acm_certificate_validation.acm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate_validation) | resource |
+| [null_resource.validation_records](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [aws_secretsmanager_secret_version.cloudflare_api_token](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/secretsmanager_secret_version) | data source |
+| [cloudflare_dns_records.validation_record](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/data-sources/dns_records) | data source |
+| [cloudflare_zone.zone](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/data-sources/zone) | data source |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_cloudflare_secret_id"></a> [cloudflare\_secret\_id](#input\_cloudflare\_secret\_id) | The secret ID for the Cloudflare API token stored in AWS Secrets Manager | `string` | n/a | yes |
+| <a name="input_create_validation_records"></a> [create\_validation\_records](#input\_create\_validation\_records) | Whether to create validation records in Cloudflare | `bool` | `true` | no |
+| <a name="input_records_map"></a> [records\_map](#input\_records\_map) | A map of records split with subdomain and zone information | <pre>map(object({<br/>    subdomain = string<br/>    zone      = string<br/>  }))</pre> | n/a | yes |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_acm_validation_options"></a> [acm\_validation\_options](#output\_acm\_validation\_options) | value of the validation record |
+| <a name="output_data_validation_record"></a> [data\_validation\_record](#output\_data\_validation\_record) | value of the validation record |
+| <a name="output_local_validation_record"></a> [local\_validation\_record](#output\_local\_validation\_record) | value of the validation record |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Authors
