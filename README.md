@@ -99,7 +99,6 @@ as described in the `.pre-commit-config.yaml` file
 | [null_resource.validation_records](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_secretsmanager_secret_version.cloudflare_api_token](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/secretsmanager_secret_version) | data source |
-| [cloudflare_dns_records.validation_record](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/data-sources/dns_records) | data source |
 | [cloudflare_zone.zone](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/data-sources/zone) | data source |
 
 ## Inputs
@@ -114,8 +113,8 @@ as described in the `.pre-commit-config.yaml` file
 
 | Name | Description |
 |------|-------------|
-| <a name="output_acm_validation_options"></a> [acm\_validation\_options](#output\_acm\_validation\_options) | value of the validation record |
-| <a name="output_data_validation_record"></a> [data\_validation\_record](#output\_data\_validation\_record) | value of the validation record |
+| <a name="output_acm_certificate_arn"></a> [acm\_certificate\_arn](#output\_acm\_certificate\_arn) | ARN of the ACM certificate |
+| <a name="output_validation_record"></a> [validation\_record](#output\_validation\_record) | value of the validation record(s) |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Authors

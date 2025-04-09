@@ -1,9 +1,9 @@
-output "data_validation_record" {
-  value       = data.cloudflare_dns_records.validation_record
-  description = "value of the validation record"
+output "validation_record" {
+  value       = module.acm.acm_certificate_domain_validation_options
+  description = "value of the validation record(s)"
 }
 
-output "acm_validation_options" {
-  value       = module.acm.acm_certificate_domain_validation_options
-  description = "value of the validation record"
+output "acm_certificate_arn" {
+  value       = module.acm.acm_certificate_arn
+  description = "ARN of the ACM certificate"
 }
