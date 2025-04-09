@@ -27,7 +27,7 @@ provider "cloudflare" {
 }
 
 module "dns_validation" {
-  source = "github.com/your-repo/terraform-aws-dns-validation"
+  source = ""tx-pts-dai/cloudflare-dns-validation/aws""
 
   cloudflare_secret_name = "cloudflare-secret-name"
   dns_records = {
