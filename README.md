@@ -17,11 +17,18 @@ AWS ACM certificates need to be renewed once a year. To automatically handle the
 Below is an example of how to use this module:
 
 ```hcl
+provider "aws" {
+  region = "eu-central-1"
+
+provider "cloudflare" {
+  api_token = jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["apiToken"]
+}
+
 module "dns_validation" {
   source = "github.com/your-repo/terraform-aws-dns-validation"
 
-  cloudflare_secret_id = "your-cloudflare-secret-id"
-  records_map = {
+  cloudflare_secret_id = "cloudflare-secret-name"
+  dns_records = {
     "foo.examples.domain.ch" = {
       subdomain = "foo.examples"
       zone      = "domain.ch"
@@ -63,7 +70,7 @@ as described in the `.pre-commit-config.yaml` file
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.11 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
 | <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | ~> 5.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.0 |
@@ -98,8 +105,8 @@ as described in the `.pre-commit-config.yaml` file
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudflare_secret_id"></a> [cloudflare\_secret\_id](#input\_cloudflare\_secret\_id) | The secret ID for the Cloudflare API token stored in AWS Secrets Manager | `string` | n/a | yes |
-| <a name="input_create_validation_records"></a> [create\_validation\_records](#input\_create\_validation\_records) | Whether to create validation records in Cloudflare | `bool` | `true` | no |
-| <a name="input_records_map"></a> [records\_map](#input\_records\_map) | A map of records split with subdomain and zone information | <pre>map(object({<br/>    subdomain = string<br/>    zone      = string<br/>  }))</pre> | n/a | yes |
+| <a name="input_dns_records"></a> [dns\_records](#input\_dns\_records) | A map of DNS records, where each key represents a unique identifier for the record.<br/>Each value is an object containing:<br/>  - subdomain: The subdomain for the DNS record.<br/>  - zone: The DNS zone associated with the record. | <pre>map(object({<br/>    subdomain = string<br/>    zone      = string<br/>  }))</pre> | n/a | yes |
+| <a name="input_enable_validation"></a> [enable\_validation](#input\_enable\_validation) | Whether to create validation records in Cloudflare | `bool` | `true` | no |
 
 ## Outputs
 
@@ -111,7 +118,7 @@ as described in the `.pre-commit-config.yaml` file
 
 ## Authors
 
-Module is maintained by [Alfredo Gottardo](https://github.com/AlfGot), [David Beauvererd](https://github.com/Davidoutz), [Davide Cammarata](https://github.com/DCamma), [Demetrio Carrara](https://github.com/sgametrio) and [Roland Bapst](https://github.com/rbapst-tamedia)
+Module is maintained by [Alfredo Gottardo](https://github.com/AlfGot), [David Beauvererd](https://github.com/Davidoutz), [Davide Cammarata](https://github.com/DCamma), [Francisco Ferreira](https://github.com/cferrera), [Roland Bapst](https://github.com/rbapst-tamedia) and [Samuel Wibrow](https://github.com/swibrow)
 
 ## License
 

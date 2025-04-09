@@ -24,10 +24,10 @@ terraform {
 }
 
 module "dns" {
-  source                    = "../../"
-  create_validation_records = true # default is true
-  cloudflare_secret_id      = "dai/cloudflare/apiToken"
-  records_map = {
+  source               = "../../"
+  enable_validation    = true # default is true
+  cloudflare_secret_id = "dai/cloudflare/apiToken"
+  dns_records = {
     "foo.examples.tamedia.ch" = {
       subdomain = "foo.examples"
       zone      = "tamedia.ch"

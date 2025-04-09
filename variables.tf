@@ -3,15 +3,20 @@ variable "cloudflare_secret_id" {
   type        = string
 }
 
-variable "records_map" {
-  description = "A map of records split with subdomain and zone information"
+variable "dns_records" {
+  description = <<EOT
+A map of DNS records, where each key represents a unique identifier for the record.
+Each value is an object containing:
+  - subdomain: The subdomain for the DNS record.
+  - zone: The DNS zone associated with the record.
+EOT
   type = map(object({
     subdomain = string
     zone      = string
   }))
 }
 
-variable "create_validation_records" {
+variable "enable_validation" {
   description = "Whether to create validation records in Cloudflare"
   type        = bool
   default     = true
