@@ -41,10 +41,10 @@ module "dns_validation" {
 
 ## Features
 
-- Automatically creates AWS ACM certificate for DNS records
-- Automatically creates DNS validation records in Cloudflare for ACM certificates.
-- Supports multiple validation records using a map of subdomains and zones.
-- Integrates with AWS Secrets Manager to securely retrieve the Cloudflare API token.
+- Creates AWS ACM certificate
+- Creates DNS validation records in Cloudflare
+- Supports multiple validation records using a map of subdomains and zones
+- Integrates with AWS Secrets Manager to securely retrieve the Cloudflare API token
 
 ## Examples
 
