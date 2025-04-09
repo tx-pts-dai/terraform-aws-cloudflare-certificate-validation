@@ -89,7 +89,7 @@ as described in the `.pre-commit-config.yaml` file
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | 5.1.1 |
+| <a name="module_acm"></a> [acm](#module\_acm) | tx-pts-dai/cloudflare-dns-validation/aws | 5.1.1 |
 
 ## Resources
 
