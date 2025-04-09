@@ -1,5 +1,5 @@
-variable "cloudflare_secret_id" {
-  description = "The secret ID for the Cloudflare API token stored in AWS Secrets Manager"
+variable "cloudflare_secret_name" {
+  description = "AWS secret name holding the CloudFlare API token"
   type        = string
 }
 

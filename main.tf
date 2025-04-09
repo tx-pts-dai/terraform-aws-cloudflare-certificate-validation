@@ -18,7 +18,7 @@ terraform {
 
 
 data "aws_secretsmanager_secret_version" "cloudflare_api_token" {
-  secret_id = var.cloudflare_secret_id
+  secret_id = var.cloudflare_secret_name
 }
 
 data "cloudflare_zone" "zone" {

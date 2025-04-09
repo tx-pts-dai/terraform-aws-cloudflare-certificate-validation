@@ -24,9 +24,9 @@ terraform {
 }
 
 module "dns" {
-  source               = "../../"
-  enable_validation    = true # default is true
-  cloudflare_secret_id = "dai/cloudflare/apiToken"
+  source                 = "../../"
+  enable_validation      = true # default is true
+  cloudflare_secret_name = "dai/cloudflare/apiToken"
   dns_records = {
     "foo.examples.tamedia.ch" = {
       subdomain = "foo.examples"

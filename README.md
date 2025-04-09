@@ -12,6 +12,8 @@ It leverages the `null_resource` and `local-exec` provisioner to interact with t
 
 AWS ACM certificates need to be renewed once a year. To automatically handle the renewal, the DNS validation records must still exist. If automatic certificate renewal fails and you receive an email from AWS (usually 30 to 60 days before expiration), first check whether these records have been manually removed. If they have, you will need to recreate them.
 
+One simple way is by renaming the `null_resource.validation_records` so it forces recreation.
+
 ## Usage
 
 Below is an example of how to use this module:
@@ -27,7 +29,7 @@ provider "cloudflare" {
 module "dns_validation" {
   source = "github.com/your-repo/terraform-aws-dns-validation"
 
-  cloudflare_secret_id = "cloudflare-secret-name"
+  cloudflare_secret_name = "cloudflare-secret-name"
   dns_records = {
     "foo.examples.domain.ch" = {
       subdomain = "foo.examples"
@@ -104,7 +106,7 @@ as described in the `.pre-commit-config.yaml` file
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cloudflare_secret_id"></a> [cloudflare\_secret\_id](#input\_cloudflare\_secret\_id) | The secret ID for the Cloudflare API token stored in AWS Secrets Manager | `string` | n/a | yes |
+| <a name="input_cloudflare_secret_name"></a> [cloudflare\_secret\_name](#input\_cloudflare\_secret\_name) | AWS secret name holding the CloudFlare API token | `string` | n/a | yes |
 | <a name="input_dns_records"></a> [dns\_records](#input\_dns\_records) | A map of DNS records, where each key represents a unique identifier for the record.<br/>Each value is an object containing:<br/>  - subdomain: The subdomain for the DNS record.<br/>  - zone: The DNS zone associated with the record. | <pre>map(object({<br/>    subdomain = string<br/>    zone      = string<br/>  }))</pre> | n/a | yes |
 | <a name="input_enable_validation"></a> [enable\_validation](#input\_enable\_validation) | Whether to create validation records in Cloudflare | `bool` | `true` | no |
 
