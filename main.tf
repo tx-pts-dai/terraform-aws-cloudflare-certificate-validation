@@ -24,7 +24,8 @@ data "aws_secretsmanager_secret_version" "cloudflare_api_token" {
 data "cloudflare_zone" "zone" {
   for_each = var.dns_records
   filter = {
-    name = each.value.zone
+    name       = each.value.zone
+    account_id = jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["accountId"]
   }
 }
 
