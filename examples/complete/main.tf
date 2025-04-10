@@ -38,3 +38,11 @@ module "dns" {
     }
   }
 }
+
+provider "cloudflare" {
+  api_token = jsondecode(data.aws_secretsmanager_secret_version.cloudflare.secret_string)["apiToken"]
+}
+
+data "aws_secretsmanager_secret_version" "cloudflare" {
+  secret_id = "dai/cloudflare/tamedia/apiToken"
+}
