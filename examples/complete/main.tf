@@ -52,14 +52,14 @@ module "acm" {
 }
 
 module "dns" {
-  source                 = "../../"
-  enable_validation      = true # default is true
+  source = "../../"
+  # enable_validation      = true # default is true
   cloudflare_secret_name = "dai/cloudflare/apiToken"
   dns_records            = local.dns_records
-  acm_certificate = {
-    arn                       = module.acm.acm_certificate_arn
-    domain_validation_options = module.acm.acm_certificate_domain_validation_options
-  }
+  # acm_certificate = {
+  #   arn                       = module.acm.acm_certificate_arn
+  #   domain_validation_options = module.acm.acm_certificate_domain_validation_options
+  # }
 }
 
 provider "cloudflare" {
