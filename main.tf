@@ -26,9 +26,20 @@ data "cloudflare_zone" "zone" {
   filter = {
     name       = each.value.zone
     account_id = jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["accountId"]
-    match      = "any"
+    match      = "all"
   }
 }
+
+# data "cloudflare_zones" "example_zones" {
+#   for_each = var.dns_records
+#   account = {
+#     id = jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["accountId"]
+#   }
+#   direction = "desc"
+#   name      = each.value.zone
+#   order     = "status"
+#   status    = "initializing"
+# }
 
 # data "aws_caller_identity" "current" {}
 
