@@ -26,7 +26,6 @@ data "cloudflare_zone" "zone" {
   filter = {
     name       = each.value.zone
     account_id = jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["accountId"]
-    match      = "all"
   }
 }
 
