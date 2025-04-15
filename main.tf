@@ -30,62 +30,49 @@ data "cloudflare_zone" "zone" {
   }
 }
 
-data "aws_caller_identity" "current" {}
+# data "aws_caller_identity" "current" {}
 
 locals {
-  domains = keys(var.dns_records)
-  validation_records = {
-    for idx, domain in local.domains : domain => {
-      zone_id = data.cloudflare_zone.zone[domain].zone_id
-      name    = trimsuffix(var.acm_certificate.domain_validation_options[idx].resource_record_name, ".")
-      value   = trimsuffix(var.acm_certificate.domain_validation_options[idx].resource_record_value, ".")
-      type    = var.acm_certificate.domain_validation_options[idx].resource_record_type
-    }
-  }
+  # domains = keys(var.dns_records)
+  # validation_records = {
+  #   for idx, domain in local.domains : domain => {
+  #     zone_id = data.cloudflare_zone.zone[domain].zone_id
+  #     name    = trimsuffix(var.acm_certificate.domain_validation_options[idx].resource_record_name, ".")
+  #     value   = trimsuffix(var.acm_certificate.domain_validation_options[idx].resource_record_value, ".")
+  #     type    = var.acm_certificate.domain_validation_options[idx].resource_record_type
+  #   }
+  # }
 }
 
-# module "acm" {
-#   source  = "terraform-aws-modules/acm/aws"
-#   version = "5.1.1"
-
-#   domain_name               = local.domains[0]
-#   subject_alternative_names = length(local.domains) > 1 ? slice(local.domains, 1, length(local.domains)) : []
-
-#   validation_method = "DNS"
-
-#   create_route53_records = false
-#   validate_certificate   = false
+# resource "null_resource" "validation_records" {
+#   for_each = var.enable_validation ? local.validation_records : {}
+#   provisioner "local-exec" {
+#     command = <<-EOF
+#       curl -X POST "https://api.cloudflare.com/client/v4/zones/${each.value.zone_id}/dns_records" \
+#       -H "Authorization: Bearer ${jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["apiToken"]}" \
+#       -H "Content-Type: application/json" \
+#       --data '{
+#         "type": "${each.value.type}",
+#         "name": "${each.value.name}",
+#         "content": "${each.value.value}",
+#         "comment": "ACM validation for account ${data.aws_caller_identity.current.account_id}",
+#         "ttl": 300,
+#         "proxied": false
+#       }'
+#     EOF
+#   }
 # }
 
-resource "null_resource" "validation_records" {
-  for_each = var.enable_validation ? local.validation_records : {}
-  provisioner "local-exec" {
-    command = <<-EOF
-      curl -X POST "https://api.cloudflare.com/client/v4/zones/${each.value.zone_id}/dns_records" \
-      -H "Authorization: Bearer ${jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["apiToken"]}" \
-      -H "Content-Type: application/json" \
-      --data '{
-        "type": "${each.value.type}",
-        "name": "${each.value.name}",
-        "content": "${each.value.value}",
-        "comment": "ACM validation for account ${data.aws_caller_identity.current.account_id}",
-        "ttl": 300,
-        "proxied": false
-      }'
-    EOF
-  }
-}
+# resource "aws_acm_certificate_validation" "acm" {
+#   count           = var.enable_validation ? 1 : 0
+#   certificate_arn = var.acm_certificate.arn
 
-resource "aws_acm_certificate_validation" "acm" {
-  count           = var.enable_validation ? 1 : 0
-  certificate_arn = var.acm_certificate.arn
+#   validation_record_fqdns = [for record in local.validation_records : record.name]
 
-  validation_record_fqdns = [for record in local.validation_records : record.name]
-
-  depends_on = [
-    null_resource.validation_records
-  ]
-}
+#   depends_on = [
+#     null_resource.validation_records
+#   ]
+# }
 
 provider "aws" {
   region = "eu-central-1"
