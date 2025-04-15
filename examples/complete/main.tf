@@ -22,7 +22,9 @@ terraform {
   }
   required_version = ">= 1.11"
 }
-
+provider "aws" {
+  region = "eu-central-1"
+}
 locals {
   dns_records = {
     "foo.examples.tamedia.ch" = {
