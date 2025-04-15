@@ -87,9 +87,7 @@ as described in the `.pre-commit-config.yaml` file
 
 ## Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | 5.1.1 |
+No modules.
 
 ## Resources
 
@@ -105,16 +103,14 @@ as described in the `.pre-commit-config.yaml` file
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_acm_certificate"></a> [acm\_certificate](#input\_acm\_certificate) | The ACM certificate data containing domain validation options | <pre>object({<br/>    arn = string<br/>    domain_validation_options = list(object({<br/>      domain_name           = string<br/>      resource_record_name  = string<br/>      resource_record_type  = string<br/>      resource_record_value = string<br/>    }))<br/>  })</pre> | n/a | yes |
 | <a name="input_cloudflare_secret_name"></a> [cloudflare\_secret\_name](#input\_cloudflare\_secret\_name) | AWS secret name holding the CloudFlare API token | `string` | n/a | yes |
 | <a name="input_dns_records"></a> [dns\_records](#input\_dns\_records) | A map of DNS records, where each key represents a unique identifier for the record.<br/>Each value is an object containing:<br/>  - subdomain: The subdomain for the DNS record.<br/>  - zone: The DNS zone associated with the record. | <pre>map(object({<br/>    subdomain = string<br/>    zone      = string<br/>  }))</pre> | n/a | yes |
 | <a name="input_enable_validation"></a> [enable\_validation](#input\_enable\_validation) | Whether to create validation records in Cloudflare | `bool` | `true` | no |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_acm_certificate_arn"></a> [acm\_certificate\_arn](#output\_acm\_certificate\_arn) | ARN of the ACM certificate |
-| <a name="output_validation_record"></a> [validation\_record](#output\_validation\_record) | value of the validation record(s) |
+No outputs.
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Authors

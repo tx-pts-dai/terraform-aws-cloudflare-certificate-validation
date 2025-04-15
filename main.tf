@@ -37,25 +37,25 @@ locals {
   validation_records = {
     for idx, domain in local.domains : domain => {
       zone_id = data.cloudflare_zone.zone[domain].zone_id
-      name    = trimsuffix(module.acm.acm_certificate_domain_validation_options[idx].resource_record_name, ".")
-      value   = trimsuffix(module.acm.acm_certificate_domain_validation_options[idx].resource_record_value, ".")
-      type    = module.acm.acm_certificate_domain_validation_options[idx].resource_record_type
+      name    = trimsuffix(var.acm_certificate.domain_validation_options[idx].resource_record_name, ".")
+      value   = trimsuffix(var.acm_certificate.domain_validation_options[idx].resource_record_value, ".")
+      type    = var.acm_certificate.domain_validation_options[idx].resource_record_type
     }
   }
 }
 
-module "acm" {
-  source  = "terraform-aws-modules/acm/aws"
-  version = "5.1.1"
+# module "acm" {
+#   source  = "terraform-aws-modules/acm/aws"
+#   version = "5.1.1"
 
-  domain_name               = local.domains[0]
-  subject_alternative_names = length(local.domains) > 1 ? slice(local.domains, 1, length(local.domains)) : []
+#   domain_name               = local.domains[0]
+#   subject_alternative_names = length(local.domains) > 1 ? slice(local.domains, 1, length(local.domains)) : []
 
-  validation_method = "DNS"
+#   validation_method = "DNS"
 
-  create_route53_records = false
-  validate_certificate   = false
-}
+#   create_route53_records = false
+#   validate_certificate   = false
+# }
 
 resource "null_resource" "validation_records" {
   for_each = var.enable_validation ? local.validation_records : {}
@@ -74,15 +74,11 @@ resource "null_resource" "validation_records" {
       }'
     EOF
   }
-
-  depends_on = [
-    module.acm
-  ]
 }
 
 resource "aws_acm_certificate_validation" "acm" {
   count           = var.enable_validation ? 1 : 0
-  certificate_arn = module.acm.acm_certificate_arn
+  certificate_arn = var.acm_certificate.arn
 
   validation_record_fqdns = [for record in local.validation_records : record.name]
 

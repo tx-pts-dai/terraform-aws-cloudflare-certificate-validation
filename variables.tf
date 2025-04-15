@@ -21,3 +21,16 @@ variable "enable_validation" {
   type        = bool
   default     = true
 }
+
+variable "acm_certificate" {
+  description = "The ACM certificate data containing domain validation options"
+  type = object({
+    arn = string
+    domain_validation_options = list(object({
+      domain_name           = string
+      resource_record_name  = string
+      resource_record_type  = string
+      resource_record_value = string
+    }))
+  })
+}

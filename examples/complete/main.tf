@@ -23,10 +23,7 @@ terraform {
   required_version = ">= 1.11"
 }
 
-module "dns" {
-  source                 = "../../"
-  enable_validation      = true # default is true
-  cloudflare_secret_name = "dai/cloudflare/apiToken"
+locals {
   dns_records = {
     "foo.examples.tamedia.ch" = {
       subdomain = "foo.examples"
@@ -36,6 +33,30 @@ module "dns" {
       subdomain = "foo.examples"
       zone      = "tamedia.tech"
     }
+  }
+  domains = keys(local.dns_records)
+}
+module "acm" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "5.1.1"
+
+  domain_name               = local.domains[0]
+  subject_alternative_names = length(local.domains) > 1 ? slice(local.domains, 1, length(local.domains)) : []
+
+  validation_method = "DNS"
+
+  create_route53_records = false
+  validate_certificate   = false
+}
+
+module "dns" {
+  source                 = "../../"
+  enable_validation      = true # default is true
+  cloudflare_secret_name = "dai/cloudflare/apiToken"
+  dns_records            = local.dns_records
+  acm_certificate = {
+    arn                       = module.acm.acm_certificate_arn
+    domain_validation_options = module.acm.acm_certificate_domain_validation_options
   }
 }
 
