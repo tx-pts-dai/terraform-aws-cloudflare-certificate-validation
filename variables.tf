@@ -1,7 +1,7 @@
-variable "cloudflare_secret_name" {
-  description = "AWS secret name holding the CloudFlare API token"
-  type        = string
-}
+# variable "cloudflare_secret_name" {
+#   description = "AWS secret name holding the CloudFlare API token"
+#   type        = string
+# }
 
 variable "dns_records" {
   description = <<EOT

@@ -17,15 +17,15 @@ terraform {
 }
 
 
-data "aws_secretsmanager_secret_version" "cloudflare_api_token" {
-  secret_id = var.cloudflare_secret_name
-}
+# data "aws_secretsmanager_secret_version" "cloudflare_api_token" {
+#   secret_id = var.cloudflare_secret_name
+# }
 
 data "cloudflare_zone" "zone" {
   for_each = var.dns_records
+
   filter = {
-    name       = each.value.zone
-    account_id = jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["accountId"]
+    name = each.value.zone
   }
 }
 
