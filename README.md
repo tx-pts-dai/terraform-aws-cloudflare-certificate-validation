@@ -16,25 +16,30 @@ One simple way is by renaming the `null_resource.validation_records` so it force
 
 ## Usage
 
-Below is an example of how to use this module:
+Below is an example of how to use this module (see `examples/complete` for full example):
 
 ```hcl
-provider "aws" {
-  region = "eu-central-1"
+module "acm" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "5.1.1"
 
-provider "cloudflare" {
-  api_token = jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["apiToken"]
+  domain_name               = local.domains[0]
+  subject_alternative_names = length(local.domains) > 1 ? slice(local.domains, 1, length(local.domains)) : []
+
+  validation_method = "DNS"
+
+  create_route53_records = false
+  validate_certificate   = false
 }
 
-module "dns_validation" {
-  source = ""tx-pts-dai/cloudflare-dns-validation/aws""
-
-  cloudflare_secret_name = "cloudflare-secret-name"
-  dns_records = {
-    "foo.examples.domain.ch" = {
-      subdomain = "foo.examples"
-      zone      = "domain.ch"
-    }
+module "dns" {
+  source                 = "tx-pts-dai/cloudflare-dns-validation/aws"
+  enable_validation      = true # default is true
+  cloudflare_secret_name = "dai/cloudflare/apiToken"
+  dns_records            = local.dns_records
+  acm_certificate = {
+    arn                       = module.acm.acm_certificate_arn
+    domain_validation_options = module.acm.acm_certificate_domain_validation_options
   }
 }
 ```
