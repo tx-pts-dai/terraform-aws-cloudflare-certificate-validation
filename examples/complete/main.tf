@@ -54,7 +54,6 @@ module "acm" {
 module "dns" {
   source = "../../"
   # enable_validation      = true # default is true
-  # cloudflare_secret_name = "dai/cloudflare/apiToken"
   dns_records = local.dns_records
   # acm_certificate = {
   #   arn                       = module.acm.acm_certificate_arn
