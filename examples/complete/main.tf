@@ -22,6 +22,7 @@ terraform {
   }
   required_version = ">= 1.11"
 }
+
 provider "aws" {
   region = "eu-central-1"
 }
@@ -32,6 +33,7 @@ provider "cloudflare" {
 data "aws_secretsmanager_secret_version" "cloudflare" {
   secret_id = "dai/cloudflare/apiToken"
 }
+
 locals {
   dns_records = {
     "foo.examples.tamedia.ch" = {
@@ -45,6 +47,7 @@ locals {
   }
   domains = keys(local.dns_records)
 }
+
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
   version = "5.1.1"

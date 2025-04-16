@@ -29,6 +29,7 @@ data "aws_caller_identity" "current" {}
 data "aws_secretsmanager_secret_version" "cloudflare_api_token" {
   secret_id = var.cloudflare_secret_name
 }
+
 locals {
   domains = keys(var.dns_records)
   validation_records = {
