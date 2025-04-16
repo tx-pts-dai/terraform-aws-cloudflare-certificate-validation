@@ -25,16 +25,23 @@ terraform {
 provider "aws" {
   region = "eu-central-1"
 }
+provider "cloudflare" {
+  api_token = jsondecode(data.aws_secretsmanager_secret_version.cloudflare.secret_string)["apiToken"]
+}
+
+data "aws_secretsmanager_secret_version" "cloudflare" {
+  secret_id = "dai/cloudflare/apiToken"
+}
 locals {
   dns_records = {
     "foo.examples.tamedia.ch" = {
       subdomain = "foo.examples"
       zone      = "tamedia.ch"
     }
-    # "foo.examples.tamedia.tech" = {
-    #   subdomain = "foo.examples"
-    #   zone      = "tamedia.tech"
-    # }
+    "foo.examples.tamedia.tech" = {
+      subdomain = "foo.examples"
+      zone      = "tamedia.tech"
+    }
   }
   domains = keys(local.dns_records)
 }
@@ -52,19 +59,12 @@ module "acm" {
 }
 
 module "dns" {
-  source = "../../"
-  # enable_validation      = true # default is true
-  dns_records = local.dns_records
-  # acm_certificate = {
-  #   arn                       = module.acm.acm_certificate_arn
-  #   domain_validation_options = module.acm.acm_certificate_domain_validation_options
-  # }
-}
-
-provider "cloudflare" {
-  api_token = jsondecode(data.aws_secretsmanager_secret_version.cloudflare.secret_string)["apiToken"]
-}
-
-data "aws_secretsmanager_secret_version" "cloudflare" {
-  secret_id = "dai/cloudflare/apiToken"
+  source                 = "../../"
+  enable_validation      = true # default is true
+  cloudflare_secret_name = "dai/cloudflare/apiToken"
+  dns_records            = local.dns_records
+  acm_certificate = {
+    arn                       = module.acm.acm_certificate_arn
+    domain_validation_options = module.acm.acm_certificate_domain_validation_options
+  }
 }

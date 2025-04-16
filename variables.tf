@@ -1,8 +1,3 @@
-# variable "cloudflare_secret_name" {
-#   description = "AWS secret name holding the CloudFlare API token"
-#   type        = string
-# }
-
 variable "dns_records" {
   description = <<EOT
 A map of DNS records, where each key represents a unique identifier for the record.
@@ -16,21 +11,26 @@ EOT
   }))
 }
 
-# variable "enable_validation" {
-#   description = "Whether to create validation records in Cloudflare"
-#   type        = bool
-#   default     = true
-# }
+variable "enable_validation" {
+  description = "Whether to create validation records in Cloudflare"
+  type        = bool
+  default     = true
+}
 
-# variable "acm_certificate" {
-#   description = "The ACM certificate data containing domain validation options"
-#   type = object({
-#     arn = string
-#     domain_validation_options = list(object({
-#       domain_name           = string
-#       resource_record_name  = string
-#       resource_record_type  = string
-#       resource_record_value = string
-#     }))
-#   })
-# }
+variable "acm_certificate" {
+  description = "The ACM certificate data containing domain validation options"
+  type = object({
+    arn = string
+    domain_validation_options = list(object({
+      domain_name           = string
+      resource_record_name  = string
+      resource_record_type  = string
+      resource_record_value = string
+    }))
+  })
+}
+
+variable "cloudflare_secret_name" {
+  description = "AWS secret name holding the CloudFlare API token"
+  type        = string
+}
