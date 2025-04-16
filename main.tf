@@ -71,7 +71,3 @@ resource "aws_acm_certificate_validation" "acm" {
     null_resource.validation_records
   ]
 }
-
-provider "aws" {
-  region = "eu-central-1"
-}
