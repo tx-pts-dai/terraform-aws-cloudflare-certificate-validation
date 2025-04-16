@@ -31,10 +31,10 @@ locals {
       subdomain = "foo.examples"
       zone      = "tamedia.ch"
     }
-    "foo.examples.tamedia.tech" = {
-      subdomain = "foo.examples"
-      zone      = "tamedia.tech"
-    }
+    # "foo.examples.tamedia.tech" = {
+    #   subdomain = "foo.examples"
+    #   zone      = "tamedia.tech"
+    # }
   }
   domains = keys(local.dns_records)
 }
