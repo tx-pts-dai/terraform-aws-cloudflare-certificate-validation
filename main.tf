@@ -16,13 +16,13 @@ terraform {
   required_version = ">= 1.6.0"
 }
 
-provider "cloudflare" {
-  api_token = jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["apiToken"]
-}
+# provider "cloudflare" {
+#   api_token = jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["apiToken"]
+# }
 
-data "aws_secretsmanager_secret_version" "cloudflare_api_token" {
-  secret_id = var.cloudflare_secret_name
-}
+# data "aws_secretsmanager_secret_version" "cloudflare_api_token" {
+#   secret_id = var.cloudflare_secret_name
+# }
 
 data "cloudflare_zone" "zone" {
   for_each = var.dns_records
