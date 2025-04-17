@@ -31,6 +31,10 @@ variable "acm_certificate" {
 }
 
 variable "cloudflare_secret_name" {
-  description = "AWS secret name holding the CloudFlare API token"
+  description = <<EOT
+The name of the AWS Secrets Manager secret containing the Cloudflare API token.
+Should be in json format:
+{"accountId":"XXXXXXXXXXXXXXXXXXXXX","apiToken":"ABCDEFGHIJKLMNOPQRSTUVWXYZ"}
+EOT
   type        = string
 }
