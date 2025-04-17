@@ -30,13 +30,18 @@ variable "acm_certificate" {
   })
 }
 
-variable "cloudflare_secret_name" {
+variable "cloudflare_secret" {
+
   description = <<EOT
-The name of the AWS Secrets Manager secret holding the Cloudflare API token.
-Should be in json format:
-{"accountId":"XXXXXXXXXXXXXXXXXXXXX","apiToken":"ABCDEFGHIJKLMNOPQRSTUVWXYZ"}
+Object containing the AWS secret manager name and property holding the token.
+The secret should be stored in json format, e.g.:
+{"apiToken":"ABCDEFGHIJKLMNOPQRSTUVWXYZ"}
 EOT
-  type        = string
+  type = object({
+    secret_name     = string
+    secret_property = optional(string, "apiToken")
+  })
+  default = null
 }
 
 variable "recreate_validation_records" {

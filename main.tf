@@ -27,7 +27,7 @@ data "cloudflare_zone" "zone" {
 data "aws_caller_identity" "current" {}
 
 data "aws_secretsmanager_secret_version" "cloudflare_api_token" {
-  secret_id = var.cloudflare_secret_name
+  secret_id = var.cloudflare_secret.secret_name
 }
 
 locals {
@@ -50,7 +50,7 @@ resource "null_resource" "validation_records" {
   provisioner "local-exec" {
     command = <<-EOF
       curl -X POST "https://api.cloudflare.com/client/v4/zones/${each.value.zone_id}/dns_records" \
-      -H "Authorization: Bearer ${jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)["apiToken"]}" \
+      -H "Authorization: Bearer ${jsondecode(data.aws_secretsmanager_secret_version.cloudflare_api_token.secret_string)[var.cloudflare_secret.secret_property]}" \
       -H "Content-Type: application/json" \
       --data '{
         "type": "${each.value.type}",
