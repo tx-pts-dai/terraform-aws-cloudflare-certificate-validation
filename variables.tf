@@ -38,3 +38,9 @@ Should be in json format:
 EOT
   type        = string
 }
+
+variable "recreate_validation_records" {
+  description = "Whether to force recreation of validation records in Cloudflare"
+  type        = bool
+  default     = true
+}

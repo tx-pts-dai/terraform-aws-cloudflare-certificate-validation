@@ -44,6 +44,9 @@ locals {
 
 resource "null_resource" "validation_records" {
   for_each = var.enable_validation ? local.validation_records : {}
+  triggers = {
+    force_recreation = var.recreate_validation_records ? timestamp() : "false"
+  }
   provisioner "local-exec" {
     command = <<-EOF
       curl -X POST "https://api.cloudflare.com/client/v4/zones/${each.value.zone_id}/dns_records" \

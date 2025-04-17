@@ -112,6 +112,7 @@ No modules.
 | <a name="input_cloudflare_secret_name"></a> [cloudflare\_secret\_name](#input\_cloudflare\_secret\_name) | The name of the AWS Secrets Manager secret holding the Cloudflare API token.<br/>Should be in json format:<br/>{"accountId":"XXXXXXXXXXXXXXXXXXXXX","apiToken":"ABCDEFGHIJKLMNOPQRSTUVWXYZ"} | `string` | n/a | yes |
 | <a name="input_dns_records"></a> [dns\_records](#input\_dns\_records) | A map of DNS records, where each key represents a unique identifier for the record.<br/>Each value is an object containing:<br/>  - subdomain: The subdomain for the DNS record.<br/>  - zone: The DNS zone associated with the record. | <pre>map(object({<br/>    subdomain = string<br/>    zone      = string<br/>  }))</pre> | n/a | yes |
 | <a name="input_enable_validation"></a> [enable\_validation](#input\_enable\_validation) | Whether to create validation records in Cloudflare | `bool` | `true` | no |
+| <a name="input_recreate_validation_records"></a> [recreate\_validation\_records](#input\_recreate\_validation\_records) | Whether to force recreation of validation records in Cloudflare | `bool` | `true` | no |
 
 ## Outputs
 
