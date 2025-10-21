@@ -22,6 +22,8 @@ locals {
       type    = var.acm_certificate.domain_validation_options[idx].resource_record_type
     }
   }
+
+  validation_record_comment = var.validation_records_comment != null ? var.validation_records_comment : "ACM validation for account ${data.aws_caller_identity.current.account_id}"
 }
 
 resource "null_resource" "validation_records" {
@@ -38,7 +40,7 @@ resource "null_resource" "validation_records" {
         "type": "${each.value.type}",
         "name": "${each.value.name}",
         "content": "${each.value.value}",
-        "comment": "ACM validation for account ${data.aws_caller_identity.current.account_id}",
+        "comment": "${local.validation_record_comment}",
         "ttl": 300,
         "proxied": false
       }'

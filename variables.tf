@@ -49,3 +49,9 @@ variable "recreate_validation_records" {
   type        = bool
   default     = true
 }
+
+variable "validation_records_comment" {
+  description = "Add custom comment to validation DNS records in Cloudflare"
+  type        = string
+  default     = null
+}
