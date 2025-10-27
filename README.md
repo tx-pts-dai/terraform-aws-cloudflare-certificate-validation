@@ -114,7 +114,8 @@ No modules.
 | <a name="input_cloudflare_secret"></a> [cloudflare\_secret](#input\_cloudflare\_secret) | Object containing the AWS secret manager name and property holding the token.<br/>The secret should be stored in json format, e.g.:<br/>{"apiToken":"ABCDEFGHIJKLMNOPQRSTUVWXYZ"} | <pre>object({<br/>    secret_name     = string<br/>    secret_property = optional(string, "apiToken")<br/>  })</pre> | `null` | no |
 | <a name="input_dns_records"></a> [dns\_records](#input\_dns\_records) | A map of DNS records, where each key represents a unique identifier for the record.<br/>Each value is an object containing:<br/>  - subdomain: The subdomain for the DNS record.<br/>  - zone: The DNS zone associated with the record. | <pre>map(object({<br/>    subdomain = string<br/>    zone      = string<br/>  }))</pre> | n/a | yes |
 | <a name="input_enable_validation"></a> [enable\_validation](#input\_enable\_validation) | Whether to create validation records in Cloudflare | `bool` | `true` | no |
-| <a name="input_recreate_validation_records"></a> [recreate\_validation\_records](#input\_recreate\_validation\_records) | Whether to force recreation of validation records in Cloudflare | `bool` | `true` | no |
+| <a name="input_force_recreate_validation_records"></a> [force\_recreate\_validation\_records](#input\_force\_recreate\_validation\_records) | Whether to force recreation of validation records in Cloudflare | `bool` | `false` | no |
+| <a name="input_recreate_on_certificate_change"></a> [recreate\_on\_certificate\_change](#input\_recreate\_on\_certificate\_change) | Whether to recreate validation records when the ACM certificate validation data changes | `bool` | `true` | no |
 | <a name="input_validation_records_comment"></a> [validation\_records\_comment](#input\_validation\_records\_comment) | Add custom comment to validation DNS records in Cloudflare | `string` | `null` | no |
 
 ## Outputs
