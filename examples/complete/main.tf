@@ -71,4 +71,6 @@ module "dns" {
     arn                       = module.acm.acm_certificate_arn
     domain_validation_options = module.acm.acm_certificate_domain_validation_options
   }
+
+  force_recreate_validation_records = true
 }

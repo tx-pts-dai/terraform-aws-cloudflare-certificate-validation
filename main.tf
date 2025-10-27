@@ -29,7 +29,15 @@ locals {
 resource "null_resource" "validation_records" {
   for_each = var.enable_validation ? local.validation_records : {}
   triggers = {
-    force_recreation = var.recreate_validation_records ? timestamp() : "false"
+    force_recreation = var.force_recreate_validation_records ? timestamp() : "false"
+    certificate_arn  = var.recreate_on_certificate_change ? var.acm_certificate.arn : "false"
+    validation_data = var.recreate_on_certificate_change ? sha256(jsonencode([
+      for opt in var.acm_certificate.domain_validation_options : {
+        name  = opt.resource_record_name
+        value = opt.resource_record_value
+        type  = opt.resource_record_type
+      }
+    ])) : "false"
   }
   provisioner "local-exec" {
     command = <<-EOF

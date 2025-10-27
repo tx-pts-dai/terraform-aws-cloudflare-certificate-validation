@@ -44,10 +44,16 @@ EOT
   default = null
 }
 
-variable "recreate_validation_records" {
-  description = "Whether to force recreation of validation records in Cloudflare"
+variable "recreate_on_certificate_change" {
+  description = "Whether to recreate validation records when the ACM certificate validation data changes"
   type        = bool
   default     = true
+}
+
+variable "force_recreate_validation_records" {
+  description = "Whether to force recreation of validation records in Cloudflare"
+  type        = bool
+  default     = false
 }
 
 variable "validation_records_comment" {
