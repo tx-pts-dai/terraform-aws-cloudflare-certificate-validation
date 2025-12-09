@@ -13,13 +13,20 @@ data "aws_secretsmanager_secret_version" "cloudflare_api_token" {
 }
 
 locals {
-  domains = keys(var.dns_records)
+  validation_map = {
+    for dv in var.acm_certificate.domain_validation_options :
+    dv.domain_name => {
+      name  = dv.resource_record_name
+      value = dv.resource_record_value
+      type  = dv.resource_record_type
+    }
+  }
   validation_records = {
-    for idx, domain in local.domains : domain => {
+    for domain, config in var.dns_records : domain => {
       zone_id = data.cloudflare_zone.zone[domain].zone_id
-      name    = trimsuffix(var.acm_certificate.domain_validation_options[idx].resource_record_name, ".")
-      value   = trimsuffix(var.acm_certificate.domain_validation_options[idx].resource_record_value, ".")
-      type    = var.acm_certificate.domain_validation_options[idx].resource_record_type
+      name    = trimsuffix(local.validation_map[domain].name, ".")
+      value   = trimsuffix(local.validation_map[domain].value, ".")
+      type    = local.validation_map[domain].type
     }
   }
 
